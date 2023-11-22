@@ -1,7 +1,8 @@
 
 
 class DatabaseRecord:
-    def __init__(self, player, age, variant, numbered, is_autograph, is_relic, grader, grade, card_number, set, added_to_collection):
+    def __init__(self, id, player, age, variant, numbered, is_autograph, is_relic, grader, grade, card_number, set, added_to_collection):
+        self.id = id
         self.player = player
         self.age = age
         self.variant = variant

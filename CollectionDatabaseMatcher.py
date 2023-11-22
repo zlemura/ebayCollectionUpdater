@@ -1,9 +1,10 @@
+import FileSearch
+import UpdateFile
 from CollectionRecord import  CollectionRecord
 from DatabaseRecord import DatabaseRecord
 
 # TODO
-# Add ID's to Database records - can be used for manual association.
-# Add manual association logic - loop through collectibles not matched, input database record ID to associte too.
+# Add logic to check if collectionId is in FinalAssociation.csv.
 
 def match_collection_records_to_database_record(collection_list, database_list):
     collection_matched_database_dict = {}
@@ -59,10 +60,64 @@ def match_collection_records_to_database_record(collection_list, database_list):
         if collection_record_matched == False:
             collection_could_not_be_matched_list.append(collection_record)
 
-    count = 0
+    return collection_matched_database_dict, collection_could_not_be_matched_list
+
+def manually_associate_unmatched_records(collection_could_not_be_matched_list, database_list):
+    counter = 0
+
+    manually_associated_unmatched_records = {}
+    manually_associated_unmatched_records_added_to_dict = []
+    skipped_records = []
+    excluded_records = []
+    player_name_collection_could_not_be_matched_list = []
+
+    #Find records with player name's.
     for record in collection_could_not_be_matched_list:
         if len(record.player) > 0:
-            print(record.__dict__)
-            count += 1
+            player_name_collection_could_not_be_matched_list.append(record)
+        else:
+            manually_associated_unmatched_records_added_to_dict.append(record)
 
-    print(count)
+    #Find records with collectibleId not in ManualAssociation.csv.
+    final_unmatched_records_list = []
+
+    for record in player_name_collection_could_not_be_matched_list:
+        if FileSearch.determine_if_collectibleId_in_ManualCollection_csv(record.collectibleId) == True:
+            print(record.collectibleId + " removed from list.")
+        else:
+            final_unmatched_records_list.append(record)
+            print(record.collectibleId + " kept in list.")
+
+    print("You are about to proceed with the manual association of " + str(
+        len(final_unmatched_records_list)) + " records. Do you wish to proceed?")
+    if input("Proceed? (Type 'y')") != 'y':
+        return None
+
+    for unmatched_record in final_unmatched_records_list:
+        counter += 1
+        print("Processing unmatched record " + str(counter) + " of " + str(len(final_unmatched_records_list)))
+        print(unmatched_record.title)
+        print(unmatched_record.collectibleId)
+        valid_input = False
+        while valid_input == False:
+            database_id_to_associate = input("Type database ID, 's' to skip, 'e' to exclude or 'd' for summary.")
+            if len(database_id_to_associate) > 0:
+                if database_id_to_associate == 's':
+                    skipped_records.append(unmatched_record)
+                    valid_input = True
+                elif database_id_to_associate == 'e':
+                    excluded_records.append(unmatched_record)
+                    valid_input = True
+                elif database_id_to_associate == 'd':
+                    for key in manually_associated_unmatched_records.keys():
+                        print(key.__dict__)
+                        print(manually_associated_unmatched_records[key])
+                else:
+                    if int(database_id_to_associate) < len(database_list):
+                        manually_associated_unmatched_records[unmatched_record] = database_id_to_associate
+                        UpdateFile.add_record_to_ManualAssociation_csv(unmatched_record.collectibleId, database_id_to_associate)
+                        valid_input = True
+                    else:
+                        print("Please enter an ID between 1 and " + str(len(database_list)))
+            else:
+                print("Please enter an ID")

@@ -35,6 +35,40 @@ def open_database_file():
         if split_line[0] == 'Player':
             continue
         database_list.append(DatabaseRecord(split_line[0], split_line[1], split_line[2], split_line[3], split_line[4], split_line[5], split_line[6],
-                                            split_line[7], split_line[8], split_line[9], split_line[15]))
+                                            split_line[7], split_line[8], split_line[9], split_line[10], split_line[16]))
 
     return database_list
+
+def open_manual_association_file():
+    manual_association_records = {}
+    manual_association_file = open('ManualAssociation.csv', 'r')
+    manual_association_file_data = manual_association_file.read()
+    split_manual_association_file_data = manual_association_file_data.splitlines()
+
+    database_list = open_database_file()
+    collection_list = open_collection_file()
+
+    for row in split_manual_association_file_data:
+        matched_database_record = None
+        matched_collection_record = None
+        row_split = row.split(',')
+        if row_split[0] == 'CollectibleId':
+            continue
+        else:
+            # Fetch DatabaseRecord.
+            for database_record in database_list:
+                if database_record.id == row_split[1]:
+                    matched_database_record = database_record
+            # Fetch CollectionRecord.
+            for collection_record in collection_list:
+                if collection_record.collectibleId == row_split[0]:
+                    matched_collection_record = collection_record
+        if matched_database_record != None and matched_collection_record != None:
+            manual_association_records[matched_collection_record] = matched_database_record
+
+    '''
+    for key in manual_association_records.keys():
+        print("Key = " + str(key.__dict__))
+        print("Value = " + str(manual_association_records[key].__dict__))
+    '''
+    return manual_association_records

@@ -107,6 +107,7 @@ def manually_associate_unmatched_records(collection_could_not_be_matched_list, d
                     valid_input = True
                 elif database_id_to_associate == 'e':
                     excluded_records.append(unmatched_record)
+                    UpdateFile.add_record_to_Exclusions_csv(unmatched_record.collectibleId)
                     valid_input = True
                 elif database_id_to_associate == 'd':
                     for key in manually_associated_unmatched_records.keys():

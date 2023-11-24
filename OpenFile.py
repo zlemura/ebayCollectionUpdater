@@ -72,3 +72,34 @@ def open_manual_association_file():
         print("Value = " + str(manual_association_records[key].__dict__))
     '''
     return manual_association_records
+
+def open_exclusions_file():
+    exclusions_file = open('Exclusions.csv', 'r')
+    exclusions_file_data = exclusions_file.read()
+    split_exclusions_file_data = exclusions_file_data.splitlines()
+
+    exclusions_list = []
+
+    for line in split_exclusions_file_data:
+        if line == 'collectibleId':
+            continue
+        else:
+            exclusions_list.append(line)
+
+    return exclusions_list
+
+def open_final_association_file():
+    final_association_file = open('FinalAssociation.csv', 'r')
+    final_association_file_data = final_association_file.read()
+    split_final_association_file_data = final_association_file_data.splitlines()
+
+    final_association_dict = {}
+
+    for line in split_final_association_file_data:
+        split_line = line.split(',')
+        if split_line[0] == 'collectibleId':
+            continue
+        else:
+            final_association_dict[split_line[0]] = split_line[1]
+
+    return final_association_dict

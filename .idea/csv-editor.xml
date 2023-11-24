@@ -3,13 +3,6 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
-        <entry key="C:\Users\z.lemura\Downloads\Database.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
         <entry key="\Collection.csv">
           <value>
             <Attribute>
@@ -17,14 +10,14 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="\FinalAssociation.csv">
+        <entry key="\ExclusionFile.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
             </Attribute>
           </value>
         </entry>
-        <entry key="\FinalAssociation.csv.csv">
+        <entry key="\FinalAssociation.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

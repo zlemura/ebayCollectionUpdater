@@ -41,7 +41,7 @@ def add_record_to_FinalAssociation_csv(collectibleId, databaseId):
         print("CollectibleId found in FinalAssociation.csv. File not updated!")
 
 def add_record_to_Exclusions_csv(collectibleId):
-    exclusions_csv = open('Exclusions.csv.csv', 'r')
+    exclusions_csv = open('Exclusions.csv', 'r')
     datareader = reader(exclusions_csv)
 
     for row in datareader:
@@ -51,7 +51,7 @@ def add_record_to_Exclusions_csv(collectibleId):
             break
 
     if collectibleId_found == False:
-        exclusions_csv = open('Exclusions.csv.csv', 'a', newline='')
+        exclusions_csv = open('Exclusions.csv', 'a', newline='')
         writer_object = writer(exclusions_csv)
         List = [collectibleId]
         writer_object.writerow(List)

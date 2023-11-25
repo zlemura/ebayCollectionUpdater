@@ -106,7 +106,7 @@ def main():
                     key)
                 print(url)
                 print("Database ID = " + str(database_record.id))
-                print("Current title = " + str(collectible_record.title))
+                #print("Current title = " + str(collectible_record.title))
                 # Title format = Player + Set or Season + Manufacturer + Card number + Variant + Grader + Grade
                 formatted_title = str(database_record.player) + " " + str(database_record.set) + " #" + str(
                     database_record.card_number)

@@ -1,22 +1,22 @@
 import CollectionDatabaseMatcher
+import EbayUpdater
 import OpenFile
+import Selenium
 
 
 # TODO
-# Open FinalAssociation.csv and extract dictionary - collectible, databaseRecord.
-# Create new title for collection record.
-# Update attributes - if applicable.
-# Open eBay.
-# Loop through collection.
-# Match record from collection record collectibleId and update to new title.
-# Update collection record attributes (if applicable).
-# Save changes to collection record.
-# Add validation logic - take collection, match record, verify title is correct format.
-# Add manual association logic - loop through collectibles not matched, input database record ID to associte too.
+# Open FinalAssociations.csv.
+# Print each record to update.
+# Print URL to update.
+# Print new title.
+# Print parrallel.
+# Confirm update made.
+# Save to update made file.
 import UpdateFile
 
 
 def main():
+    '''
     #Open database file.
     database_list = OpenFile.open_database_file()
     #Open collection file.
@@ -92,6 +92,54 @@ def main():
     for key in manual_associated_records.keys():
         UpdateFile.add_record_to_FinalAssociation_csv(key.collectibleId, manual_associated_records[key].id)
 
+    '''
+    final_association_dict = OpenFile.open_final_association_file()
+
+    for key in final_association_dict.keys():
+        #Check if collectibleId in CollectibleUpdateLog.csv.
+        if OpenFile.determine_if_collectibleId_in_CollectibleUpdateLog_csv(str(key)) == False:
+            record_updated = False
+            while record_updated == False:
+                collectible_record = OpenFile.fetch_collectible_record_by_collectibleId(str(key))
+                database_record = OpenFile.fetch_database_record_by_databaseId(final_association_dict[key])
+                url = "https://www.ebay.com/collection/collectible?notionalTypeId=Soccer&period=1Y&collectibleId=" + str(
+                    key)
+                print(url)
+                print("Database ID = " + str(database_record.id))
+                print("Current title = " + str(collectible_record.title))
+                # Title format = Player + Set or Season + Manufacturer + Card number + Variant + Grader + Grade
+                formatted_title = str(database_record.player) + " " + str(database_record.set) + " #" + str(
+                    database_record.card_number)
+
+                if len(database_record.variant) > 0 and database_record.variant != 'Base':
+                    formatted_title = formatted_title + " " + str(database_record.variant)
+                if len(database_record.numbered) > 0:
+                    formatted_title = formatted_title + " " + str(database_record.numbered)
+                if len(database_record.grader) > 0:
+                    formatted_title = formatted_title + " " + str(database_record.grader) + " " + str(
+                        database_record.grade)
+                print("Formatted title = " + formatted_title)
+
+                if len(database_record.variant) > 0 or len(database_record.numbered) > 0:
+                    if database_record.variant == 'Base':
+                        if len(database_record.numbered) > 0:
+                            print("Parrallel = " + str(database_record.numbered))
+                    else:
+                        if len(database_record.numbered) > 0:
+                            print("Parrallel = " + str(database_record.variant) + " " + str(database_record.numbered))
+                        else:
+                            print("Parrallel = " + str(database_record.variant))
+                else:
+                    print("No parrallel data found")
+
+                if input("Collectible updated?") == 'y':
+                    record_updated = True
+                    UpdateFile.add_record_to_CollectibleUpdateLog_csv(collectible_record.collectibleId,
+                                                                      database_record.id)
+                else:
+                    print("Please update collectible and confirm.")
+        else:
+            continue
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':

@@ -59,3 +59,23 @@ def add_record_to_Exclusions_csv(collectibleId):
         print("Exclusions.csv updated successfully!")
     else:
         print("CollectibleId found in Exclusion.csv. File not updated!")
+
+def add_record_to_CollectibleUpdateLog_csv(collectibleId, databaseId):
+    collectible_update_csv = open('CollectibleUpdateLog.csv', 'r')
+    datareader = reader(collectible_update_csv)
+
+    for row in datareader:
+        collectibleId_found = False
+        if collectibleId in row:
+            collectibleId_found = True
+            break
+
+    if collectibleId_found == False:
+        final_association_csv = open('CollectibleUpdateLog.csv', 'a', newline='')
+        writer_object = writer(final_association_csv)
+        List = [collectibleId, databaseId]
+        writer_object.writerow(List)
+        final_association_csv.close()
+        print("CollectibleUpdateLog.csv updated successfully!")
+    else:
+        print("CollectibleId found in CollectibleUpdateLog.csv. File not updated!")

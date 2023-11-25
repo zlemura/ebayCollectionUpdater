@@ -103,3 +103,59 @@ def open_final_association_file():
             final_association_dict[split_line[0]] = split_line[1]
 
     return final_association_dict
+
+def fetch_collectible_record_by_collectibleId(collectibleId):
+    # Open file
+    collection_file = open('Collection.csv', 'r')
+    # Read data from file
+    collection_file_data = collection_file.read()
+    # Split into lines
+    split_collection_file_data = collection_file_data.splitlines()
+
+    for line in split_collection_file_data:
+        split_line = line.split(',')
+        if split_line[0] == 'CollectibleId':
+            continue
+        if split_line[0] == collectibleId:
+            print("Matched record!")
+            print(split_line[0])
+            return CollectionRecord(split_line[0], split_line[1], split_line[5], split_line[6], split_line[7],
+                             split_line[9], split_line[11], split_line[12])
+
+    return None
+
+def fetch_database_record_by_databaseId(databaseId):
+    # Open file
+    database_file = open('Database.csv', 'r')
+    # Read data from file
+    database_file_data = database_file.read()
+    # Split into lines
+    split_database_file_data = database_file_data.splitlines()
+
+    for line in split_database_file_data:
+        split_line = line.split(',')
+        if split_line[0] == 'Player':
+            continue
+        if split_line[0] == databaseId:
+            return DatabaseRecord(split_line[0], split_line[1], split_line[2], split_line[3], split_line[4], split_line[5],
+                           split_line[6],
+                           split_line[7], split_line[8], split_line[9], split_line[10], split_line[16])
+
+    return None
+
+def determine_if_collectibleId_in_CollectibleUpdateLog_csv(collectibleId):
+    # Open file
+    collectible_update_log = open('CollectibleUpdateLog.csv', 'r')
+    # Read data from file
+    collectible_update_log_file_data = collectible_update_log.read()
+    # Split into lines
+    split_collection_update_log_data = collectible_update_log_file_data.splitlines()
+
+    for line in split_collection_update_log_data:
+        split_line = line.split(',')
+        if split_line[0] == 'CollectibleId':
+            continue
+        if split_line[0] == collectibleId:
+            return True
+
+    return False
